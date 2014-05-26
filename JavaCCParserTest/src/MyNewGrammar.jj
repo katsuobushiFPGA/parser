@@ -1,0 +1,104 @@
+options
+{
+  static = false;
+}
+PARSER_BEGIN(Parser)
+import java.io.*;
+class Parser {
+}
+PARSER_END(Parser)
+TOKEN : {
+    <NUM : ["1"-"9"](["0"-"9"])*>
+ |  <PLUSOP : "+" >
+ |  <MULOP : "*" >
+ |  <MINUSOP : "-" >
+ |  <DIVOP : "/" >
+ |  <OPEN : "(" >
+ |  <CLOSE : ")" >
+ |  <EQOP : "=" >
+}
+SKIP : {
+    " " | "\n" | "\r"
+}
+public Node start() :
+{
+    Node root;
+}
+{
+    root=sum()
+    <EQOP> { return root; }
+}
+//足し算
+public Node sum() :
+{
+    Node root, node;
+}
+{
+    root=remin()
+    ( <PLUSOP> node=remin() {
+                root = Op.connectToLeft(root);
+		root.setOp('+');
+		root.addRight(node);
+       }
+    )* { return root; }
+}
+//引き算
+private Node remin() :
+{
+  Node node,root;
+}
+{
+  root=prod()
+   ( <MINUSOP> node=prod() {
+                root = Op.connectToLeft(root);
+		root.setOp('-');
+		root.addRight(node);
+       }
+   )* { return root; }
+}
+
+//掛け算
+private Node prod() :
+{
+	Node node, root;
+}
+{
+    root=quo()
+  ( <MULOP> node=quo() {
+                root = Op.connectToLeft(root);
+		root.setOp('*');
+		root.addRight(node);
+     }
+   )* { return root; }
+}
+
+//割り算
+private Node quo() :
+{
+  Node node,root;
+}
+{
+  root= atai()
+   ( <DIVOP> node =atai() {
+                root = Op.connectToLeft(root);
+		root.setOp('/');
+		root.addRight(node);
+       }
+   )* { return root; }
+}
+
+private Node atai() :
+{
+  Node node;
+}
+{
+	node=num() { return node; }
+   | <OPEN> node=sum() <CLOSE> {return node;}
+}
+private Node num() :
+{
+  Token token;
+}
+{
+  token=<NUM> { return new Num(Integer.parseInt(token.image));}
+}
