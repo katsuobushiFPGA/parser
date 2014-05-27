@@ -4,7 +4,7 @@ class Rei {
     public static void main(String[] arg) throws ParseException {
 	final Reader r = new InputStreamReader(System.in);
 	final Parser parser = new Parser(r);
-	final int tree = parser.start();
+	final double tree = parser.start();
 	  System.out.println(tree);
 	}
 }

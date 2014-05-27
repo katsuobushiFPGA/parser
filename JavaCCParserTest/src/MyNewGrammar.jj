@@ -20,18 +20,18 @@ TOKEN : {
 SKIP : {
     " " | "\n" | "\r"
 }
-public int start() :
+public double start() :
 {
-    int root;
+    double root;
 }
 {
     root=sum()
     <EQOP> { return root; }
 }
 
-public int sum() :
+public double sum() :
 {
-    int root, node;
+    double root, node;
 }
 {
     root=prod()
@@ -52,9 +52,9 @@ public int sum() :
 }
 
 
-private int prod() :
+private double prod() :
 {
-	int node, root;
+	double node, root;
 }
 {
     root=atai()
@@ -74,15 +74,15 @@ private int prod() :
    )* { return root; }
 }
 
-private int atai() :
+private double atai() :
 {
-  int node;
+  double node;
 }
 {
 	node=num() { return node; }
    | <OPEN> node=sum() <CLOSE> {return node;}
 }
-private int num() :
+private double num() :
 {
 
 }
