@@ -20,85 +20,72 @@ TOKEN : {
 SKIP : {
     " " | "\n" | "\r"
 }
-public Node start() :
+public int start() :
 {
-    Node root;
+    int root;
 }
 {
     root=sum()
     <EQOP> { return root; }
 }
-//足し算
-public Node sum() :
+
+public int sum() :
 {
-    Node root, node;
+    int root, node;
 }
 {
-    root=remin()
-    ( <PLUSOP> node=remin() {
-                root = Op.connectToLeft(root);
-		root.setOp('+');
-		root.addRight(node);
+    root=prod()
+    ( <PLUSOP> node=prod() {
+    //  root = Op.connectToLeft(root);
+	//	root.setOp('+');
+		root += node;
+	//  root.addRight(node);
        }
-    )* { return root; }
-}
-//引き算
-private Node remin() :
-{
-  Node node,root;
-}
-{
-  root=prod()
-   ( <MINUSOP> node=prod() {
-                root = Op.connectToLeft(root);
-		root.setOp('-');
-		root.addRight(node);
+     |
+	 <MINUSOP> node=prod() {
+    //  root = Op.connectToLeft(root);
+	//  root.setOp('-');
+		root -= node;
+	//	root.addRight(node);
        }
    )* { return root; }
 }
 
-//掛け算
-private Node prod() :
+
+private int prod() :
 {
-	Node node, root;
+	int node, root;
 }
 {
-    root=quo()
-  ( <MULOP> node=quo() {
-                root = Op.connectToLeft(root);
-		root.setOp('*');
-		root.addRight(node);
+    root=atai()
+  ( <MULOP> node=atai() {
+	//  root = Op.connectToLeft(root);
+	//  root.setOp('*');
+		root *= node;
+	//	root.addRight(node);
      }
-   )* { return root; }
-}
-
-//割り算
-private Node quo() :
-{
-  Node node,root;
-}
-{
-  root= atai()
-   ( <DIVOP> node =atai() {
-                root = Op.connectToLeft(root);
-		root.setOp('/');
-		root.addRight(node);
+   |
+   <DIVOP> node =atai() {
+    //  root = Op.connectToLeft(root);
+	//  root.setOp('/');
+		root /= node;
+	//  root.addRight(node);
        }
    )* { return root; }
 }
 
-private Node atai() :
+private int atai() :
 {
-  Node node;
+  int node;
 }
 {
 	node=num() { return node; }
    | <OPEN> node=sum() <CLOSE> {return node;}
 }
-private Node num() :
+private int num() :
 {
-  Token token;
+
 }
 {
-  token=<NUM> { return new Num(Integer.parseInt(token.image));}
+  <NUM> { return Integer.parseInt(token.image);}
 }
